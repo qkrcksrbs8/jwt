@@ -6,7 +6,6 @@ const http = require("http");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
-// const { request } = require("../session-practice/db");
 
 process.env.ACCESS_TOKEN_SECRET='pcg_qweqsdaasdqweasedwqdsadczxdcz';
 process.env.REFRESH_TOKEN_SECRET='pcg_zxcasdqwexzczxdqeqwdzxcasdqwe';
@@ -107,6 +106,36 @@ app.get("/user", authenticateAccessToken, (req, res) => {
     console.log(req.user);
     res.json(users.filter((user) => user.id === req.user.id));
 });
+
+app.get("/test", (req, res) => {
+    console.log('test 시작');
+
+    // const xxx =  async () =>{
+    //    await http("http://localhost:8080/test2", {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json-patch+json",
+    //         },
+    //         body: JSON.stringify({
+    //             title: "Test",
+    //             body: "I am testing!",
+    //             userId: 1,
+    //         }),
+    //     }).then((response) => console.log(response))
+    //
+    //    return res.send('test 종료');
+    // }
+    // return xxx()
+    //     .catch(res.send('오류입니다.'));
+
+    return res.send('test 응답');
+})
+
+app.get('/test2', (req, res) => {
+    console.log('/test2 :');
+    console.log(req);
+    return res.send('응답');
+})
 
 server.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
