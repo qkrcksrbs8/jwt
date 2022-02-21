@@ -6,6 +6,7 @@ const http = require("http");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
+const {response} = require("express");
 
 process.env.ACCESS_TOKEN_SECRET='pcg_qweqsdaasdqweasedwqdsadczxdcz';
 process.env.REFRESH_TOKEN_SECRET='pcg_zxcasdqwexzczxdqeqwdzxcasdqwe';
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 
 // 임시 id, pw 배열
 const users = [
-    { id: "hello", pw: "world" },
+    { id: "admin", pw: "1234" },
     { id: "good", pw: "bye" },
 ];
 
@@ -53,13 +54,19 @@ app.post("/login", (req, res) => {
     let id = req.body.id;
     let pw = req.body.pw;
 
+    console.log('id: ',id);
+    console.log('pw: ',pw);
+
     let user = login(id, pw);
     if (user === "") return res.sendStatus(500);
 
     let accessToken = generateAccessToken(user);
     let refreshToken = generateRefreshToken(user);
 
-    res.json({ accessToken, refreshToken });
+    console.log('/login 성공');
+
+    // return res.json({ accessToken, refreshToken });
+    return res.json({ 'accessToken':'111', 'refreshToken':'222' });
 });
 
 // access token의 유효성 검사
@@ -107,34 +114,14 @@ app.get("/user", authenticateAccessToken, (req, res) => {
     res.json(users.filter((user) => user.id === req.user.id));
 });
 
-app.get("/test", (req, res) => {
-    console.log('test 시작');
 
-    // const xxx =  async () =>{
-    //    await http("http://localhost:8080/test2", {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json-patch+json",
-    //         },
-    //         body: JSON.stringify({
-    //             title: "Test",
-    //             body: "I am testing!",
-    //             userId: 1,
-    //         }),
-    //     }).then((response) => console.log(response))
-    //
-    //    return res.send('test 종료');
-    // }
-    // return xxx()
-    //     .catch(res.send('오류입니다.'));
-
-    return res.send('test 응답');
-})
-
-app.get('/test2', (req, res) => {
-    console.log('/test2 :');
-    console.log(req);
-    return res.send('응답');
+app.post('/testUser', (req, res) => {
+    console.log('user post 요청');
+    let id = req.body.id;
+    let pw = req.body.pw;
+    console.log('id: ',id);
+    console.log('pw: ',pw);
+    res.json(id, pw);
 })
 
 server.listen(PORT, () => {
